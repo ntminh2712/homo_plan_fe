@@ -1,7 +1,8 @@
 import React from "react";
+import { RegisterView } from "../../views/register/RegisterView";
 
 const Register = () => {
-  return <div>hahaha</div>;
+  return <RegisterView />;
 };
 
 export default Register;
