@@ -12,6 +12,7 @@ import { HomeOutlined, LogoutOutlined } from "@ant-design/icons";
 import { DailyChallengeItems } from "../../components/dashboard/DailyChallengeItems";
 import { RankingListItems } from "../../components/dashboard/RankingListItems";
 import { MoneyHistoryItems } from "../../components/dashboard/MoneyHistoryItems";
+import { useQueryChallengeTask } from "../../api/dashboardApi";
 
 const { Header, Content, Sider } = Layout;
 type MenuItem = Required<MenuProps>["items"][number];
@@ -34,6 +35,8 @@ const items: MenuItem[] = [
 ];
 
 export const DashboardView = () => {
+  const { data } = useQueryChallengeTask();
+  console.log(data);
   return (
     <div className="min-h-[100vh] bg-[#0f123b]">
       <Layout className="h-full min-h-[100vh] p-4 bg-[#0f123b]">
