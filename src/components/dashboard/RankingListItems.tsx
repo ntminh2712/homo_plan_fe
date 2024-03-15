@@ -1,7 +1,6 @@
 import React from "react";
 
 export const RankingListItems = ({ data, ranking }: any) => {
-  console.log(data);
   return (
     <div className="flex items-center justify-between border-b border-[#0075FF1A] border-solid h-[60px]">
       <div className="flex items-center gap-x-3 fullhd:gap-x-6">
