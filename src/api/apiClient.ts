@@ -4,7 +4,7 @@ import Cookies from "universal-cookie";
 import { ToastError } from "../components/common/toast";
 
 const baseURLApp =
-  "https://0b45-2001-ee0-8202-e9ef-2812-c9a5-76b6-7547.ngrok-free.app/api/";
+  "https://api.homoplan.com/api/";
 
 const apiClient = axios.create({
   baseURL: baseURLApp,
@@ -35,8 +35,8 @@ apiClient.interceptors.request.use(
 
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
-    if (response && response.data) {
-      return response.data;
+    if (response) {
+      return response;
     }
     return response;
   },
