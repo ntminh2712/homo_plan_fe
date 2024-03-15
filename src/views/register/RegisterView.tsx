@@ -10,9 +10,7 @@ import axios from "axios";
 export const RegisterView = () => {
   const navigate = useNavigate();
   const {
-    register,
     handleSubmit,
-    setValue,
     control,
     formState: { errors },
   } = useForm<ParamsRegister>({

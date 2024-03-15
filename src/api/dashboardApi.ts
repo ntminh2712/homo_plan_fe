@@ -1,5 +1,6 @@
 import apiClient from "./apiClient";
 import { useQuery } from "react-query";
+import { ParamsGetDailyReward } from "./../type/api/dashboardType";
 
 const dashboardApi = {
   getChallengerTasks() {
@@ -14,6 +15,10 @@ const dashboardApi = {
     const url = `/TransactionHistory/GetRanking`;
     return apiClient.get(url);
   },
+  getDailyReward(params: ParamsGetDailyReward) {
+    const url = `/TransactionHistory/GetRewardDailyByUser`;
+    return apiClient.get(url, { params });
+  },
 };
 
 export const useQueryChallengeTask = () => {
@@ -23,14 +28,17 @@ export const useQueryChallengeTask = () => {
 };
 
 export const useQueryDailyTask = () => {
-  return useQuery(["get-daily-task"], () =>
-    dashboardApi.getDailyTasks()
-  );
+  return useQuery(["get-daily-task"], () => dashboardApi.getDailyTasks());
 };
 
 export const useQueryGetRanking = () => {
-  return useQuery(["get-ranking"], () =>
-    dashboardApi.getRanking()
+  return useQuery(["get-ranking"], () => dashboardApi.getRanking());
+};
+export const useQueryGetDailyReward = (userId: string) => {
+  return useQuery(
+    ["get-daily-reward", userId],
+    () => dashboardApi.getDailyReward({ userId: userId }),
+    { enabled: !!userId }
   );
 };
 

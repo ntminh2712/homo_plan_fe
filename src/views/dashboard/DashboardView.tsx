@@ -13,11 +13,13 @@ import { DailyChallengeItems } from "../../components/dashboard/DailyChallengeIt
 import { RankingListItems } from "../../components/dashboard/RankingListItems";
 import { MoneyHistoryItems } from "../../components/dashboard/MoneyHistoryItems";
 import {
+  useQueryGetDailyReward,
   useQueryChallengeTask,
   useQueryDailyTask,
   useQueryGetRanking,
 } from "../../api/dashboardApi";
 import { ChallengeItems } from "../../components/dashboard/ChallengeItems";
+import Cookies from "universal-cookie";
 
 const { Header, Content, Sider } = Layout;
 type MenuItem = Required<MenuProps>["items"][number];
@@ -40,6 +42,12 @@ const items: MenuItem[] = [
 ];
 
 export const DashboardView = () => {
+  const cookies = new Cookies();
+  const fullName = cookies.get("full_name");
+  const email = cookies.get("email");
+  const avatar = cookies.get("avatar_path");
+  const userId = cookies.get("user_id");
+
   const [isChallenge, setIsChallenge] = useState<boolean>(false);
 
   const { data: challengeData } = useQueryChallengeTask();
@@ -48,6 +56,8 @@ export const DashboardView = () => {
   const dailyItems = dailyData?.data;
   const { data: rankingData } = useQueryGetRanking();
   const rankingItems = rankingData?.data;
+  const { data: dailyRewardData } = useQueryGetDailyReward(userId);
+  const dailyRewardItem = dailyRewardData?.data;
   return (
     <div className="min-h-[100vh] bg-[#0f123b]">
       <Layout className="h-full min-h-[100vh] p-4 bg-[#0f123b]">
@@ -90,11 +100,15 @@ export const DashboardView = () => {
             </div>
             <div className="flex items-center gap-x-4">
               <div className="w-[50px] h-[50px] rounded-[12px]">
-                <img src="/img/avatar.png" alt="" className="rounded-[12px]" />
+                <img
+                  src={avatar ? avatar : "/img/avatar.png"}
+                  alt=""
+                  className="rounded-[12px]"
+                />
               </div>
               <div className="flex flex-col">
-                <p className="font-bold text-[18px]">Nguyen Van A</p>
-                <p className="text-[14px] text-gray-1">test@gmail.com</p>
+                <p className="font-bold text-[18px]">{fullName}</p>
+                <p className="text-[14px] text-gray-1">{email}</p>
               </div>
             </div>
           </div>
@@ -154,8 +168,8 @@ export const DashboardView = () => {
                 {!isChallenge ? (
                   <div className="mt-4 flex flex-col gap-y-4">
                     {dailyItems &&
-                      dailyItems.map((dailyItem: any) => {
-                        return <DailyChallengeItems data={dailyItem} />;
+                      dailyItems.map((dailyItem: any, index:number) => {
+                        return <DailyChallengeItems data={dailyItem} key={index} />;
                       })}
                   </div>
                 ) : (
@@ -185,6 +199,7 @@ export const DashboardView = () => {
                           <RankingListItems
                             data={rankingItem}
                             ranking={index + 1}
+                            key={index}
                           />
                         );
                       })}

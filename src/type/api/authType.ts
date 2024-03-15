@@ -12,3 +12,7 @@ export interface ParamsRegister {
   Full_Name: string;
   Email: string;
 }
+export interface ParamsLogin {
+  User_Name: string;
+  Password: string;
+}

@@ -1,7 +1,34 @@
-import { Button, Input } from "antd";
+import { Button, Form, Input } from "antd";
 import React from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { ParamsLogin } from "../../type/api/authType";
+import { useMutation } from "react-query";
+import authApi from "../../api/authApi";
+import { addCookie } from "../../utils/addCookie";
 
 export const LoginView = () => {
+  const navigate = useNavigate();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<ParamsLogin>({
+    mode: "onSubmit",
+  });
+
+  const mutationRegister = useMutation((params: ParamsLogin) => {
+    return authApi.login(params);
+  });
+
+  const onUpdate: SubmitHandler<ParamsLogin> = (params) => {
+    mutationRegister.mutate(params, {
+      onSuccess: (res: any) => {
+        addCookie(res.data);
+        navigate("/");
+      },
+    });
+  };
   return (
     <div className="w-full h-full min-h-[100vh] flex bg-[#0F123B]">
       <div className="w-[56%] relative">
@@ -22,30 +49,75 @@ export const LoginView = () => {
             Enter your email and password to sign in
           </p>
         </div>
-        <div className="flex flex-col items-center mt-6">
-          <div className="mt-6 flex flex-col gap-y-6 w-[350px]">
-            <div>
-              <p className="text-[14px] font-medium leading-5 mb-[5px]">
-                Email
-              </p>
-              <Input className="user-input" placeholder="Your email" />
+        <Form
+          name="update"
+          layout="vertical"
+          onFinish={handleSubmit(onUpdate)}
+          autoComplete="off"
+        >
+          <div className="flex flex-col items-center mt-6">
+            <div className="mt-6 flex flex-col w-[350px]">
+              <Form.Item
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                label={
+                  <p className="text-[14px] font-medium leading-5">User Name</p>
+                }
+                rules={[
+                  { required: true, message: "Please input your banner name!" },
+                ]}
+              >
+                <Controller
+                  name="User_Name"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      className="user-input"
+                      placeholder="Your username"
+                    />
+                  )}
+                />
+              </Form.Item>
+
+              <Form.Item
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                label={
+                  <p className="text-[14px] font-medium leading-5">User Name</p>
+                }
+                rules={[
+                  { required: true, message: "Please input your banner name!" },
+                ]}
+              >
+                <Controller
+                  name="Password"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      type="password"
+                      className="user-input"
+                      placeholder="Your username"
+                    />
+                  )}
+                />
+              </Form.Item>
             </div>
-            <div>
-              <p className="text-[14px] font-medium leading-5 mb-[5px]">
-                Password
-              </p>
-              <Input
-                type="password"
-                className="user-input"
-                placeholder="Your password"
-              />
-            </div>
+
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="w-[350px] h-[50px] mt-6"
+              >
+                Login
+              </Button>
+            </Form.Item>
           </div>
-        </div>
-        <Button type="primary" className="w-[350px] h-[50px] mt-6">
-          Sign Up
-        </Button>
-        <div className="text-gray-1 text-[14px] mt-6">
+        </Form>
+
+        <div className="text-gray-1 text-[14px]">
           Don't have an account?{" "}
           <span className="cursor-pointer font-bold">Sign up</span>
         </div>
