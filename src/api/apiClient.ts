@@ -4,7 +4,7 @@ import Cookies from "universal-cookie";
 import { ToastError } from "../components/common/toast";
 
 const baseURLApp =
-  "http://149.28.21.56:8080/api/";
+  "https://api.homoplan.com/api/";
 
 const apiClient = axios.create({
   baseURL: baseURLApp,
