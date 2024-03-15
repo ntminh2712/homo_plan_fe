@@ -4,12 +4,12 @@ import Cookies from "universal-cookie";
 import { ToastError } from "../components/common/toast";
 
 const baseURLApp =
-  "https://api.homoplan.com/api/";
+  "http://149.28.21.56:8080/api/";
 
 const apiClient = axios.create({
   baseURL: baseURLApp,
   headers: {
-    "content-type": "application/json",
+    "content-type": "multipart/form-data",
   },
 
   paramsSerializer: (params) => {
