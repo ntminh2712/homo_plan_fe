@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Breadcrumb,
   Layout,
@@ -12,7 +12,12 @@ import { HomeOutlined, LogoutOutlined } from "@ant-design/icons";
 import { DailyChallengeItems } from "../../components/dashboard/DailyChallengeItems";
 import { RankingListItems } from "../../components/dashboard/RankingListItems";
 import { MoneyHistoryItems } from "../../components/dashboard/MoneyHistoryItems";
-import { useQueryChallengeTask } from "../../api/dashboardApi";
+import {
+  useQueryChallengeTask,
+  useQueryDailyTask,
+  useQueryGetRanking,
+} from "../../api/dashboardApi";
+import { ChallengeItems } from "../../components/dashboard/ChallengeItems";
 
 const { Header, Content, Sider } = Layout;
 type MenuItem = Required<MenuProps>["items"][number];
@@ -35,12 +40,18 @@ const items: MenuItem[] = [
 ];
 
 export const DashboardView = () => {
-  const { data } = useQueryChallengeTask();
-  console.log(data);
+  const [isChallenge, setIsChallenge] = useState<boolean>(false);
+
+  const { data: challengeData } = useQueryChallengeTask();
+  const challengeItems = challengeData?.data;
+  const { data: dailyData } = useQueryDailyTask();
+  const dailyItems = dailyData?.data;
+  const { data: rankingData } = useQueryGetRanking();
+  const rankingItems = rankingData?.data;
   return (
     <div className="min-h-[100vh] bg-[#0f123b]">
       <Layout className="h-full min-h-[100vh] p-4 bg-[#0f123b]">
-        <Sider width={288} style={{ background: "#0f123b" }}>
+        <Sider width={256} style={{ background: "#0f123b" }}>
           <div className="h-full bg-[#060b26] rounded-[20px]">
             <p className="text-[14px] tracking-[18%] font-medium text-center pt-[29px]">
               VISION UI FREE
@@ -108,11 +119,27 @@ export const DashboardView = () => {
             <div className="flex h-full gap-x-6">
               <div className="w-[63%] bg-[#060b26] mt-6 p-6 rounded-[20px]">
                 <div>
-                  <div className="flex items-center gap-x-4">
-                    <div className="w-[300px] cursor-pointer h-[49px] bg-[#0075ff] rounded-[10px] text-[18px] flex items-center justify-center">
+                  <div className="flex items-center gap-x-2 fullhd:gap-x-4">
+                    <div
+                      className={`w-[200px] h-[40px] fullhd:w-[300px] fullhd:h-[49px] cursor-pointer  rounded-[10px] text-[18px] flex items-center justify-center ${
+                        !isChallenge ? "bg-[#0075ff]" : "bg-[#0075FF4D]"
+                      }`}
+                      onClick={() => {
+                        setIsChallenge(false);
+                      }}
+                    >
                       Nhiệm vụ hàng ngày
                     </div>
-                    <div className="w-[300px] cursor-pointer h-[49px] bg-[#0F874D4D] text-[#fff]/[0.8] rounded-[10px] text-[18px] flex items-center justify-center">
+                    <div
+                      className={`w-[200px] h-[40px] fullhd:w-[300px] fullhd:h-[49px] cursor-pointer  text-[#fff]/[0.8] rounded-[10px] text-[18px] flex items-center justify-center ${
+                        isChallenge
+                          ? "bg-green-1 text-[#fff]"
+                          : "bg-[#0F874D4D]"
+                      }`}
+                      onClick={() => {
+                        setIsChallenge(true);
+                      }}
+                    >
                       Thử thách
                     </div>
                   </div>
@@ -124,11 +151,21 @@ export const DashboardView = () => {
                       "linear-gradient(90deg, rgba(224, 225, 226, 0) 0%, #E0E1E2 49.52%, rgba(224, 225, 226, 0.15625) 99.04%)",
                   }}
                 ></div>
-                <div className="mt-4 flex flex-col gap-y-4">
-                  <DailyChallengeItems />
-                  <DailyChallengeItems />
-                  <DailyChallengeItems />
-                </div>
+                {!isChallenge ? (
+                  <div className="mt-4 flex flex-col gap-y-4">
+                    {dailyItems &&
+                      dailyItems.map((dailyItem: any) => {
+                        return <DailyChallengeItems data={dailyItem} />;
+                      })}
+                  </div>
+                ) : (
+                  <div className="mt-4 flex flex-col gap-y-4">
+                    {challengeItems &&
+                      challengeItems.map((challengeItem: any) => {
+                        return <ChallengeItems data={challengeItem} />;
+                      })}
+                  </div>
+                )}
               </div>
               <div className="w-[37%] flex flex-col mt-6 gap-y-2.5">
                 <div className="bg-[#060b26] p-6 rounded-[20px]">
@@ -142,15 +179,15 @@ export const DashboardView = () => {
                     </p>
                   </div>
                   <div className="mt-6 flex flex-col gap-y-1">
-                    <RankingListItems />
-                    <RankingListItems />
-                    <RankingListItems />
-                    <RankingListItems />
-                    <RankingListItems />
-                    <RankingListItems />
-                    <RankingListItems />
-                    <RankingListItems />
-                    <RankingListItems />
+                    {rankingItems &&
+                      rankingItems.map((rankingItem: any, index: number) => {
+                        return (
+                          <RankingListItems
+                            data={rankingItem}
+                            ranking={index + 1}
+                          />
+                        );
+                      })}
                   </div>
                 </div>
 

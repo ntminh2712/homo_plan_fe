@@ -7,6 +7,9 @@ module.exports = {
       "gray-1": "#A0AEC0",
       "green-1": "#01b574",
     },
+    screens: {
+      'fullhd': '1920px',
+    },
   },
   plugins: [],
   corePlugins: {
