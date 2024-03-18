@@ -1,15 +1,20 @@
-import React from "react";
+import moment from "moment";
 
-export const MoneyHistoryItems = () => {
+export const MoneyHistoryItems = ({ data }: any) => {
   return (
     <div className="flex items-center justify-between h-[45px]">
       <div>
-        <p className="text-[14px] font-medium">Pool</p>
+        <p className="text-[14px] font-medium">
+          {data.title_daily_tasks ?? data.title_challenge_tasks}
+        </p>
         <p className="text-[14px] text-gray-1 font-medium mt-1">
-          27 March 2020, at 12:30 PM
+          {moment(data.created_at).format("DD MMMM YYYY")}, at{" "}
+          {moment(data.created_at).format("LT")}
         </p>
       </div>
-      <p className="text-[14px] font-medium text-green-1">+2500$</p>
+      <p className="text-[14px] font-medium text-green-1">
+        +{data.reward_amount}$
+      </p>
     </div>
   );
 };

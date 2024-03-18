@@ -1,14 +1,23 @@
 import { Button, Form, Input } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { ParamsRegister } from "../../type/api/authType";
 import authApi from "../../api/authApi";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Cookies from "universal-cookie";
 
 export const RegisterView = () => {
+  const cookies = new Cookies();
+  const userId = cookies.get("user_id");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userId) {
+      navigate("/");
+    }
+  }, [userId]);
   const {
     handleSubmit,
     control,
@@ -204,7 +213,14 @@ export const RegisterView = () => {
 
         <div className="text-gray-1 text-[14px]">
           Already have an account?{" "}
-          <span className="cursor-pointer font-bold">Sign in</span>
+          <span
+            className="cursor-pointer font-bold"
+            onClick={() => {
+              navigate("/login");
+            }}
+          >
+            Sign in
+          </span>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Breadcrumb,
   Layout,
@@ -20,6 +20,9 @@ import {
 } from "../../api/dashboardApi";
 import { ChallengeItems } from "../../components/dashboard/ChallengeItems";
 import Cookies from "universal-cookie";
+import { redirect, useNavigate } from "react-router-dom";
+import { removeCookie } from "../../utils/removeCookie";
+import { ToastError } from "../../components/common/toast";
 
 const { Header, Content, Sider } = Layout;
 type MenuItem = Required<MenuProps>["items"][number];
@@ -47,6 +50,13 @@ export const DashboardView = () => {
   const email = cookies.get("email");
   const avatar = cookies.get("avatar_path");
   const userId = cookies.get("user_id");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!userId) {
+      navigate("/login");
+    }
+  }, [userId]);
 
   const [isChallenge, setIsChallenge] = useState<boolean>(false);
 
@@ -57,12 +67,12 @@ export const DashboardView = () => {
   const { data: rankingData } = useQueryGetRanking();
   const rankingItems = rankingData?.data;
   const { data: dailyRewardData } = useQueryGetDailyReward(userId);
-  const dailyRewardItem = dailyRewardData?.data;
+  const dailyRewardItems = dailyRewardData?.data;
   return (
     <div className="min-h-[100vh] bg-[#0f123b]">
       <Layout className="h-full min-h-[100vh] p-4 bg-[#0f123b]">
         <Sider width={256} style={{ background: "#0f123b" }}>
-          <div className="h-full bg-[#060b26] rounded-[20px]">
+          <div className="h-full bg-[#060b26] rounded-[20px] relative">
             <p className="text-[14px] tracking-[18%] font-medium text-center pt-[29px]">
               VISION UI FREE
             </p>
@@ -75,8 +85,7 @@ export const DashboardView = () => {
             ></div>
             <Menu
               mode="inline"
-              defaultSelectedKeys={["1"]}
-              defaultOpenKeys={["sub1"]}
+              selectedKeys={["1"]}
               style={{
                 borderRight: 0,
                 borderRadius: "10px",
@@ -84,7 +93,16 @@ export const DashboardView = () => {
                 padding: "24px 16px",
               }}
               items={items}
+              onClick={(res) => {
+                if (res.key === "2") {
+                  removeCookie();
+                  navigate(0);
+                }
+              }}
             />
+          </div>
+          <div className="absolute bottom-4 left-1/2 -translate-x-2/4 w-full px-[19px] cursor-pointer">
+            <img src="/img/need-help.svg" alt="" />
           </div>
         </Sider>
         <Layout style={{ padding: "0 24px", background: "#0f123b" }}>
@@ -168,8 +186,10 @@ export const DashboardView = () => {
                 {!isChallenge ? (
                   <div className="mt-4 flex flex-col gap-y-4">
                     {dailyItems &&
-                      dailyItems.map((dailyItem: any, index:number) => {
-                        return <DailyChallengeItems data={dailyItem} key={index} />;
+                      dailyItems.map((dailyItem: any, index: number) => {
+                        return (
+                          <DailyChallengeItems data={dailyItem} key={index} />
+                        );
                       })}
                   </div>
                 ) : (
@@ -216,9 +236,17 @@ export const DashboardView = () => {
                     </p>
                   </div>
                   <div className="mt-6 flex flex-col gap-y-2">
-                    <MoneyHistoryItems />
-                    <MoneyHistoryItems />
-                    <MoneyHistoryItems />
+                    {dailyRewardItems &&
+                      dailyRewardItems.map(
+                        (dailyRewardItem: any, index: number) => {
+                          return (
+                            <MoneyHistoryItems
+                              data={dailyRewardItem}
+                              key={index}
+                            />
+                          );
+                        }
+                      )}
                   </div>
                 </div>
               </div>
