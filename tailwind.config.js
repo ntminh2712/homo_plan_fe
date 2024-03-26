@@ -9,6 +9,7 @@ module.exports = {
     },
     screens: {
       'fullhd': '1920px',
+      'laptop-l': '1440px',
     },
   },
   plugins: [],

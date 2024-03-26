@@ -25,10 +25,12 @@ img {
   height: 100%;
   object-fit: cover;
 }
+
 img,
 video {
   max-width: 100%;
 }
+
 img,
 svg,
 video,
@@ -44,24 +46,23 @@ object {
 .user-input {
   width: 100% !important;
   height: 50px !important;
-  background: linear-gradient(
-    123.64deg,
-    rgba(255, 255, 255, 0) -22.38%,
-    rgba(255, 255, 255, 0.039) 70.38%
-  ) !important;
+  background: linear-gradient(123.64deg,
+      rgba(255, 255, 255, 0) -22.38%,
+      rgba(255, 255, 255, 0.039) 70.38%) !important;
   color: #fff !important;
   border: 1px solid #a0aec0 !important;
 }
+
 .user-input::placeholder {
   color: #a0aec0;
 }
+
 .ant-menu-light .ant-menu-item-selected {
   background: #0075ff1a !important;
 }
+
 .bg-primary {
-  background: linear-gradient(
-    126.97deg,
-    rgba(6, 11, 38, 0.74) 28.26%,
-    rgba(26, 31, 55, 0.5) 91.2%
-  );
+  background: linear-gradient(126.97deg,
+      rgba(6, 11, 38, 0.74) 28.26%,
+      rgba(26, 31, 55, 0.5) 91.2%);
 }
