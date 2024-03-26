@@ -17,12 +17,14 @@ import {
   useQueryChallengeTask,
   useQueryDailyTask,
   useQueryGetRanking,
+  useQueryGetWalletUser,
 } from "../../api/dashboardApi";
 import { ChallengeItems } from "../../components/dashboard/ChallengeItems";
 import Cookies from "universal-cookie";
 import { redirect, useNavigate } from "react-router-dom";
 import { removeCookie } from "../../utils/removeCookie";
 import { ToastError } from "../../components/common/toast";
+import { useLoading } from "../../hooks/useLoading";
 
 const { Header, Content, Sider } = Layout;
 type MenuItem = Required<MenuProps>["items"][number];
@@ -60,14 +62,30 @@ export const DashboardView = () => {
 
   const [isChallenge, setIsChallenge] = useState<boolean>(false);
 
-  const { data: challengeData } = useQueryChallengeTask();
+  const { data: challengeData, isLoading: challengeLoading } =
+    useQueryChallengeTask();
   const challengeItems = challengeData?.data;
-  const { data: dailyData } = useQueryDailyTask();
+  const { data: dailyData, isLoading: dailyLoading } = useQueryDailyTask();
   const dailyItems = dailyData?.data;
-  const { data: rankingData } = useQueryGetRanking();
+  const { data: rankingData, isLoading: rankingLoading } = useQueryGetRanking();
   const rankingItems = rankingData?.data;
-  const { data: dailyRewardData } = useQueryGetDailyReward(userId);
+  const { data: dailyRewardData, isLoading: dailyRewardLoading } =
+    useQueryGetDailyReward(userId);
   const dailyRewardItems = dailyRewardData?.data;
+  const {
+    data: walletUserData,
+    isLoading: walletUserLoading,
+    refetch: walletUserRefetch,
+  } = useQueryGetWalletUser(userId);
+  const walletUserItems = walletUserData?.data;
+
+  useLoading(
+    challengeLoading ||
+      dailyLoading ||
+      rankingLoading ||
+      dailyRewardLoading ||
+      walletUserLoading
+  );
   return (
     <div className="min-h-[100vh] bg-[#0f123b]">
       <Layout className="h-full min-h-[100vh] p-4 bg-[#0f123b]">
@@ -132,19 +150,69 @@ export const DashboardView = () => {
           </div>
 
           <Content className="mt-9 flex flex-col">
-            <div>
-              <div className="w-[382px] h-[80px] bg-primary rounded-[20px] flex items-center justify-between px-5">
+            <div className="flex gap-x-3 fullhd:gap-x-6">
+              <div className="w-full h-[80px] bg-primary rounded-[20px] flex items-center justify-between px-5">
+                <div className="flex flex-col">
+                  <p className="text-[12px] text-gray-1 font-medium">
+                    Amount USD
+                  </p>
+                  <div className="flex items-center gap-x-[4.5px]">
+                    <p className="text-[18px] font-bold">
+                      ${walletUserItems?.amount_usd}
+                    </p>
+                    <p className="text-[14px] font-bold text-green-1">+55%</p>
+                  </div>
+                </div>
+                <div className="w-[50px] h-[50px]">
+                  <img src="/img/icon2.png" alt="" />
+                </div>
+              </div>
+              <div className="w-full h-[80px] bg-primary rounded-[20px] flex items-center justify-between px-5">
                 <div className="flex flex-col">
                   <p className="text-[12px] text-gray-1 font-medium">
                     Daily rewards
                   </p>
                   <div className="flex items-center gap-x-[4.5px]">
-                    <p className="text-[18px] font-bold">$53,000</p>
+                    <p className="text-[18px] font-bold">
+                      ${walletUserItems?.daily_rewards}
+                    </p>
                     <p className="text-[14px] font-bold text-green-1">+55%</p>
                   </div>
                 </div>
-                <div className="w-[45px] h-[45px]">
+                <div className="w-[50px] h-[50px]">
                   <img src="/img/icon1.png" alt="" />
+                </div>
+              </div>
+              <div className="w-full h-[80px] bg-primary rounded-[20px] flex items-center justify-between px-5">
+                <div className="flex flex-col">
+                  <p className="text-[12px] text-gray-1 font-medium">
+                    Female USD
+                  </p>
+                  <div className="flex items-center gap-x-[4.5px]">
+                    <p className="text-[18px] font-bold">
+                      ${walletUserItems?.female_usd}
+                    </p>
+                    <p className="text-[14px] font-bold text-green-1">+55%</p>
+                  </div>
+                </div>
+                <div className="w-[50px] h-[50px]">
+                  <img src="/img/icon3.png" alt="" />
+                </div>
+              </div>
+              <div className="w-full h-[80px] bg-primary rounded-[20px] flex items-center justify-between px-5">
+                <div className="flex flex-col">
+                  <p className="text-[12px] text-gray-1 font-medium">
+                    Male USD
+                  </p>
+                  <div className="flex items-center gap-x-[4.5px]">
+                    <p className="text-[18px] font-bold">
+                      ${walletUserItems?.male_usd}
+                    </p>
+                    <p className="text-[14px] font-bold text-green-1">+55%</p>
+                  </div>
+                </div>
+                <div className="w-[50px] h-[50px]">
+                  <img src="/img/icon4.png" alt="" />
                 </div>
               </div>
             </div>
@@ -188,7 +256,12 @@ export const DashboardView = () => {
                     {dailyItems &&
                       dailyItems.map((dailyItem: any, index: number) => {
                         return (
-                          <DailyChallengeItems data={dailyItem} key={index} />
+                          <DailyChallengeItems
+                            data={dailyItem}
+                            userId={userId}
+                            refetch={walletUserRefetch}
+                            key={index}
+                          />
                         );
                       })}
                   </div>

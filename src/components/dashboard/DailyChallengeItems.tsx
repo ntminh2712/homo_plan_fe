@@ -1,4 +1,41 @@
-export const DailyChallengeItems = ({ data }: any) => {
+import { useState } from "react";
+import dashboardApi, { useQuerySuccessDailyTask } from "../../api/dashboardApi";
+import { useMutation, useQueryClient } from "react-query";
+import { ParamsClaimReward } from "../../type/api/dashboardType";
+import { useLoading } from "../../hooks/useLoading";
+
+export const DailyChallengeItems = ({ data, userId, refetch }: any) => {
+  const queryClient = useQueryClient();
+
+  const [callSuccess, setCallSuccess] = useState(false);
+  const { isLoading } = useQuerySuccessDailyTask(
+    userId,
+    Number(data.daily_tasks_id),
+    callSuccess
+  );
+  const handleSuccessDailyTask = async () => {
+    await setCallSuccess(true);
+    queryClient.fetchQuery("get-daily-task");
+  };
+
+  const mutationClaimReward = useMutation((params: ParamsClaimReward) => {
+    return dashboardApi.claimReward(params);
+  });
+  const handleClaimReward = () => {
+    mutationClaimReward.mutate(
+      {
+        user_id: userId,
+        daily_tasks_id: data.daily_tasks_id,
+      },
+      {
+        onSuccess: () => {
+          refetch();
+        },
+      }
+    );
+  };
+
+  useLoading(mutationClaimReward.isLoading || isLoading);
   return (
     <div className="w-full h-[109px] rounded-[20px] bg-[#0075FF0D] p-4 flex items-center justify-between">
       <div className="flex items-center gap-x-4">
@@ -20,7 +57,7 @@ export const DailyChallengeItems = ({ data }: any) => {
       <div className="flex flex-col gap-y-[7px]">
         <div
           className="cursor-pointer w-[150px] h-[35px] rounded-[8px] bg-[#0075FF80] text-[14px] font-medium flex items-center justify-center border border-[#0075FF] border-solid"
-          onClick={() => window.open(data.link)}
+          onClick={handleSuccessDailyTask}
         >
           Visit
         </div>
@@ -29,7 +66,10 @@ export const DailyChallengeItems = ({ data }: any) => {
             Chưa hoàn thành
           </div>
         ) : (
-          <div className="cursor-pointer w-[150px] h-[35px] rounded-[8px] bg-[#0075FF] text-[14px] font-medium flex items-center justify-center">
+          <div
+            className="cursor-pointer w-[150px] h-[35px] rounded-[8px] bg-[#0075FF] text-[14px] font-medium flex items-center justify-center"
+            onClick={handleClaimReward}
+          >
             Nhận thưởng
           </div>
         )}
