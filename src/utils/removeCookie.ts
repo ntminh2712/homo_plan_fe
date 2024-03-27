@@ -8,4 +8,5 @@ export const removeCookie = () => {
   cookies.remove("full_name", { path: "/" });
   cookies.remove("email", { path: "/" });
   cookies.remove("avatar_path", { path: "/" });
+  cookies.remove("reference_id", { path: "/" });
 };

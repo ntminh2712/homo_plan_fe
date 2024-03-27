@@ -15,25 +15,13 @@ export const DailyChallengeItems = ({ data, userId, refetch }: any) => {
   );
   const handleSuccessDailyTask = async () => {
     await setCallSuccess(true);
+    window.open(data.link);
     queryClient.fetchQuery("get-daily-task");
   };
 
   const mutationClaimReward = useMutation((params: ParamsClaimReward) => {
     return dashboardApi.claimReward(params);
   });
-  const handleClaimReward = () => {
-    mutationClaimReward.mutate(
-      {
-        user_id: userId,
-        daily_tasks_id: data.daily_tasks_id,
-      },
-      {
-        onSuccess: () => {
-          refetch();
-        },
-      }
-    );
-  };
 
   useLoading(mutationClaimReward.isLoading || isLoading);
   return (
@@ -66,10 +54,7 @@ export const DailyChallengeItems = ({ data, userId, refetch }: any) => {
             Chưa hoàn thành
           </div>
         ) : (
-          <div
-            className="cursor-pointer w-[150px] h-[35px] rounded-[8px] bg-[#0075FF] text-[14px] font-medium flex items-center justify-center"
-            onClick={handleClaimReward}
-          >
+          <div className="w-[150px] h-[35px] rounded-[8px] bg-[#0075FF] text-[14px] font-medium flex items-center justify-center">
             Nhận thưởng
           </div>
         )}

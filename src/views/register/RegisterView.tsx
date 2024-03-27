@@ -4,7 +4,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { ParamsRegister } from "../../type/api/authType";
 import authApi from "../../api/authApi";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "universal-cookie";
 
@@ -21,6 +21,7 @@ export const RegisterView = () => {
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm<ParamsRegister>({
     mode: "onSubmit",
@@ -37,6 +38,16 @@ export const RegisterView = () => {
       },
     });
   };
+
+  const { search } = useLocation();
+  const query = new URLSearchParams(search);
+  const referralCode = query.get("referral");
+
+  useEffect(() => {
+    if (referralCode) {
+      setValue("partner_id", referralCode);
+    }
+  }, [referralCode]);
   return (
     <div className="w-full h-full min-h-[100vh] flex bg-[#0F123B]">
       <div className="w-[56%] relative">
@@ -59,19 +70,6 @@ export const RegisterView = () => {
           </p>
         </div>
         <div className="flex flex-col items-center mt-6">
-          <p className="font-bold text-[18px]">Register with</p>
-          <div className="flex gap-x-[15px] mt-6">
-            <div className="w-[56px] fullhd:w-[75px] cursor-pointer">
-              <img src="/img/facebook.png" alt="" />
-            </div>
-            <div className="w-[56px] fullhd:w-[75px] cursor-pointer">
-              <img src="/img/apple.png" alt="" />
-            </div>
-            <div className="w-[56px] fullhd:w-[75px] cursor-pointer">
-              <img src="/img/google.png" alt="" />
-            </div>
-          </div>
-          <p className="font-bold text-[18px] text-gray-1 mt-[20.5px]">or</p>
           <Form
             name="update"
             layout="vertical"
@@ -193,6 +191,33 @@ export const RegisterView = () => {
                       type="text"
                       className="user-input"
                       placeholder="Your phone number"
+                    />
+                  )}
+                />
+              </Form.Item>
+
+              <Form.Item
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                label={
+                  <p className="text-[14px] font-medium leading-5">
+                    Referral Code
+                  </p>
+                }
+                rules={[
+                  { required: true, message: "Please input your banner name!" },
+                ]}
+              >
+                <Controller
+                  name="partner_id"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      type="text"
+                      className="user-input"
+                      placeholder="Referral code"
+                      defaultValue={referralCode ? referralCode : undefined}
                     />
                   )}
                 />

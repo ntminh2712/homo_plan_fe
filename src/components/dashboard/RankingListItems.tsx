@@ -9,7 +9,7 @@ export const RankingListItems = ({ data, ranking }: any) => {
         </div>
         <div className="flex items-center gap-x-2 fullhd:gap-x-4">
           <div className="w-10 h-10 rounded-[10px] border border-white border-solid">
-            <img src="/img/avatar.png" alt="" className="rounded-[10px]" />
+            <img src="/img/avatar.jpg" alt="" className="rounded-[8px]" />
           </div>
           <div className="flex flex-col">
             <p className="font-medium text-[14px]">{data.full_name}</p>

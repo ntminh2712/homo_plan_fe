@@ -7,6 +7,7 @@ import { useMutation } from "react-query";
 import authApi from "../../api/authApi";
 import { addCookie } from "../../utils/addCookie";
 import Cookies from "universal-cookie";
+import { useLoading } from "../../hooks/useLoading";
 
 export const LoginView = () => {
   const cookies = new Cookies();
@@ -38,6 +39,8 @@ export const LoginView = () => {
       },
     });
   };
+
+  useLoading(mutationRegister.isLoading);
   return (
     <>
       <div className="w-full h-full min-h-[100vh] flex bg-[#0F123B]">
