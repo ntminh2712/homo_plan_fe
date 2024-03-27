@@ -11,6 +11,7 @@ export interface ParamsRegister {
   Phone: string;
   Full_Name: string;
   Email: string;
+  partner_id?: string;
 }
 export interface ParamsLogin {
   User_Name: string;

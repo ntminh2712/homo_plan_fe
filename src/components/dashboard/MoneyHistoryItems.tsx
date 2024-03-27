@@ -3,8 +3,8 @@ import moment from "moment";
 export const MoneyHistoryItems = ({ data }: any) => {
   return (
     <div className="flex items-center justify-between h-[45px]">
-      <div>
-        <p className="text-[14px] font-medium">
+      <div className="truncate">
+        <p className="text-[14px] font-medium truncate pr-4">
           {data.title_daily_tasks ?? data.title_challenge_tasks}
         </p>
         <p className="text-[14px] text-gray-1 font-medium mt-1">

@@ -7,6 +7,10 @@
   width: 0;
 }
 
+.Toastify * {
+  color: #000 !important;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;

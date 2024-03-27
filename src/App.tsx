@@ -10,6 +10,9 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { handleResultApi } from "./utils/handleResultApi";
 import Loading from "./components/common/loading";
 import { RecoilRoot } from "recoil";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastError, ToastSuccess } from "./components/common/toast";
 
 function App() {
   const [queryClient] = useState(
@@ -19,24 +22,26 @@ function App() {
           refetchOnWindowFocus: false,
           retry: false,
           onError: (result: any) => {
-            handleResultApi(result.response?.data);
+            ToastError(result.response?.data ?? "Network error");
           },
         },
         mutations: {
-          onSuccess: (result) => {
-            handleResultApi(result);
+          onSuccess: (result: any) => {
+            ToastSuccess(result.response?.data);
           },
           onError: (result: any) => {
-            handleResultApi(result.response?.data);
+            ToastError(result.response?.data ?? "Network error");
           },
         },
       },
     })
   );
+  toast.clearWaitingQueue();
   return (
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
         <Loading />
+        <ToastContainer />
         <BrowserRouter>
           <Routes>
             <Route index element={<Dashboard />} />

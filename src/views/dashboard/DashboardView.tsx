@@ -23,7 +23,7 @@ import { ChallengeItems } from "../../components/dashboard/ChallengeItems";
 import Cookies from "universal-cookie";
 import { redirect, useNavigate } from "react-router-dom";
 import { removeCookie } from "../../utils/removeCookie";
-import { ToastError } from "../../components/common/toast";
+import { ToastError, ToastSuccess } from "../../components/common/toast";
 import { useLoading } from "../../hooks/useLoading";
 
 const { Header, Content, Sider } = Layout;
@@ -86,9 +86,16 @@ export const DashboardView = () => {
       dailyRewardLoading ||
       walletUserLoading
   );
+
+  const referralId = cookies.get("reference_id");
+  const referralUrl = `https://www.homoplan.com/register?referral=${referralId}`;
+  const handleCopyReference = () => {
+    ToastSuccess("Referral code copied");
+    navigator.clipboard.writeText(referralUrl);
+  };
   return (
-    <div className="min-h-[100vh] bg-[#0f123b]">
-      <Layout className="h-full min-h-[100vh] p-4 bg-[#0f123b]">
+    <div className="h-[100vh] bg-[#0f123b]">
+      <Layout className="h-full h-[100vh] p-4 bg-[#0f123b]">
         <Sider width={256} style={{ background: "#0f123b" }}>
           <div className="h-full bg-[#060b26] rounded-[20px] relative">
             <p className="text-[14px] tracking-[18%] font-medium text-center pt-[29px]">
@@ -119,7 +126,10 @@ export const DashboardView = () => {
               }}
             />
           </div>
-          <div className="absolute bottom-4 left-1/2 -translate-x-2/4 w-full px-[19px] cursor-pointer">
+          <div
+            className="absolute bottom-4 left-1/2 -translate-x-2/4 w-full px-[19px] cursor-pointer"
+            onClick={handleCopyReference}
+          >
             <img src="/img/need-help.svg" alt="" />
           </div>
         </Sider>
@@ -137,7 +147,7 @@ export const DashboardView = () => {
             <div className="flex items-center gap-x-4">
               <div className="w-[50px] h-[50px] rounded-[12px]">
                 <img
-                  src={avatar ? avatar : "/img/avatar.png"}
+                  src={avatar ? avatar : "/img/avatar.jpg"}
                   alt=""
                   className="rounded-[12px]"
                 />
@@ -149,8 +159,8 @@ export const DashboardView = () => {
             </div>
           </div>
 
-          <Content className="mt-9 flex flex-col">
-            <div className="flex gap-x-3 fullhd:gap-x-6">
+          <Content className="flex flex-col">
+            <div className="flex gap-x-3 fullhd:gap-x-6 pt-9">
               <div className="w-full h-[80px] bg-primary rounded-[20px] flex items-center justify-between px-5">
                 <div className="flex flex-col">
                   <p className="text-[12px] text-gray-1 font-medium">
@@ -216,43 +226,46 @@ export const DashboardView = () => {
                 </div>
               </div>
             </div>
-            <div className="flex h-full gap-x-6">
-              <div className="w-[63%] bg-[#060b26] mt-6 p-6 rounded-[20px]">
+            <div className="flex h-full gap-x-6 overflow-hidden">
+              <div className="w-[63%] bg-[#060b26] mt-6 p-6 rounded-[20px] flex flex-col">
                 <div>
-                  <div className="flex items-center gap-x-2 fullhd:gap-x-4">
-                    <div
-                      className={`w-[200px] h-[40px] fullhd:w-[300px] fullhd:h-[49px] cursor-pointer  rounded-[10px] text-[18px] flex items-center justify-center ${
-                        !isChallenge ? "bg-[#0075ff]" : "bg-[#0075FF4D]"
-                      }`}
-                      onClick={() => {
-                        setIsChallenge(false);
-                      }}
-                    >
-                      Nhiệm vụ hàng ngày
-                    </div>
-                    <div
-                      className={`w-[200px] h-[40px] fullhd:w-[300px] fullhd:h-[49px] cursor-pointer  text-[#fff]/[0.8] rounded-[10px] text-[18px] flex items-center justify-center ${
-                        isChallenge
-                          ? "bg-green-1 text-[#fff]"
-                          : "bg-[#0F874D4D]"
-                      }`}
-                      onClick={() => {
-                        setIsChallenge(true);
-                      }}
-                    >
-                      Thử thách
+                  <div>
+                    <div className="flex items-center gap-x-2 fullhd:gap-x-4">
+                      <div
+                        className={`w-[200px] h-[40px] fullhd:w-[300px] fullhd:h-[49px] cursor-pointer  rounded-[10px] text-[18px] flex items-center justify-center ${
+                          !isChallenge ? "bg-[#0075ff]" : "bg-[#0075FF4D]"
+                        }`}
+                        onClick={() => {
+                          setIsChallenge(false);
+                        }}
+                      >
+                        Nhiệm vụ hàng ngày
+                      </div>
+                      <div
+                        className={`w-[200px] h-[40px] fullhd:w-[300px] fullhd:h-[49px] cursor-pointer  text-[#fff]/[0.8] rounded-[10px] text-[18px] flex items-center justify-center ${
+                          isChallenge
+                            ? "bg-green-1 text-[#fff]"
+                            : "bg-[#0F874D4D]"
+                        }`}
+                        onClick={() => {
+                          setIsChallenge(true);
+                        }}
+                      >
+                        Thử thách
+                      </div>
                     </div>
                   </div>
+                  <div
+                    className="w-full h-[1px] mt-4"
+                    style={{
+                      background:
+                        "linear-gradient(90deg, rgba(224, 225, 226, 0) 0%, #E0E1E2 49.52%, rgba(224, 225, 226, 0.15625) 99.04%)",
+                    }}
+                  ></div>
                 </div>
-                <div
-                  className="w-full h-[1px] mt-4"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, rgba(224, 225, 226, 0) 0%, #E0E1E2 49.52%, rgba(224, 225, 226, 0.15625) 99.04%)",
-                  }}
-                ></div>
+
                 {!isChallenge ? (
-                  <div className="mt-4 flex flex-col gap-y-4">
+                  <div className="mt-4 flex flex-col gap-y-4 overflow-y-scroll">
                     {dailyItems &&
                       dailyItems.map((dailyItem: any, index: number) => {
                         return (
@@ -287,19 +300,21 @@ export const DashboardView = () => {
                   </div>
                   <div className="mt-6 flex flex-col gap-y-1">
                     {rankingItems &&
-                      rankingItems.map((rankingItem: any, index: number) => {
-                        return (
-                          <RankingListItems
-                            data={rankingItem}
-                            ranking={index + 1}
-                            key={index}
-                          />
-                        );
-                      })}
+                      rankingItems
+                        .slice(0, 5)
+                        .map((rankingItem: any, index: number) => {
+                          return (
+                            <RankingListItems
+                              data={rankingItem}
+                              ranking={index + 1}
+                              key={index}
+                            />
+                          );
+                        })}
                   </div>
                 </div>
 
-                <div className="bg-[#060b26] p-6 rounded-[20px]">
+                <div className="bg-[#060b26] p-6 rounded-[20px] flex flex-col overflow-y-scroll">
                   <div className="flex flex-col items-start justify-start">
                     <p className="font-bold text-[18px]">
                       Lịch sử nhận tiền hàng ngày
@@ -308,7 +323,7 @@ export const DashboardView = () => {
                       30 done this month
                     </p>
                   </div>
-                  <div className="mt-6 flex flex-col gap-y-2">
+                  <div className="mt-6 flex flex-col gap-y-2 overflow-y-scroll">
                     {dailyRewardItems &&
                       dailyRewardItems.map(
                         (dailyRewardItem: any, index: number) => {
