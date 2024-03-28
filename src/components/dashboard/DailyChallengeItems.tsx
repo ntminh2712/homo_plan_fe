@@ -55,7 +55,7 @@ export const DailyChallengeItems = ({ data, userId, refetch }: any) => {
           </div>
         ) : (
           <div className="w-[150px] h-[35px] rounded-[8px] bg-[#0075FF] text-[14px] font-medium flex items-center justify-center">
-            Nhận thưởng
+            Đã nhận thưởng
           </div>
         )}
       </div>
