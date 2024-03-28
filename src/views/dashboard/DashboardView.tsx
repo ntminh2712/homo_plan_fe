@@ -63,12 +63,14 @@ export const DashboardView = () => {
   const [isChallenge, setIsChallenge] = useState<boolean>(false);
 
   const { data: challengeData, isLoading: challengeLoading } =
-    useQueryChallengeTask();
+    useQueryChallengeTask(userId);
   const challengeItems = challengeData?.data;
-  const { data: dailyData, isLoading: dailyLoading } = useQueryDailyTask();
+  const { data: dailyData, isLoading: dailyLoading } =
+    useQueryDailyTask(userId);
   const dailyItems = dailyData?.data;
-  const { data: rankingData, isLoading: rankingLoading } = useQueryGetRanking();
-  const rankingItems = rankingData?.data;
+  const { data: rankingData, isLoading: rankingLoading } =
+    useQueryGetRanking(userId);
+  const rankingItems = rankingData?.data?.listRanking;
   const { data: dailyRewardData, isLoading: dailyRewardLoading } =
     useQueryGetDailyReward(userId);
   const dailyRewardItems = dailyRewardData?.data;
@@ -294,7 +296,10 @@ export const DashboardView = () => {
                     <p className="text-[14px] text-gray-1">
                       Rank của bạn:{" "}
                       <span className="text-[#0075ff] text-[16px] font-semibold">
-                        #1234
+                        #
+                        {rankingData?.data?.my_rank !== 0
+                          ? rankingData?.data?.my_rank
+                          : "Unrank"}
                       </span>
                     </p>
                   </div>

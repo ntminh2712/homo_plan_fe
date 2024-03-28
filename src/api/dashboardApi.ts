@@ -3,17 +3,17 @@ import { useQuery } from "react-query";
 import { ParamsGetDailyReward, ParamsSuccessDailyTask, ParamsClaimReward } from "./../type/api/dashboardType";
 
 const dashboardApi = {
-  getChallengerTasks() {
-    const url = `/ChallengeTasks`;
-    return apiClient.get(url);
+  getChallengerTasks(params: ParamsGetDailyReward) {
+    const url = `/ChallengeTasks/GetAllChallengeTaskByUser`;
+    return apiClient.get(url, { params });
   },
-  getDailyTasks() {
-    const url = `/DailyTasks`;
-    return apiClient.get(url);
+  getDailyTasks(params: ParamsGetDailyReward) {
+    const url = `/Transaction/GetDailyTasksByUser`;
+    return apiClient.get(url, { params });
   },
-  getRanking() {
+  getRanking(params: ParamsGetDailyReward) {
     const url = `/Transaction/GetRanking`;
-    return apiClient.get(url);
+    return apiClient.get(url, { params });
   },
   getDailyReward(params: ParamsGetDailyReward) {
     const url = `/Transaction/GetRewardDailyByUser`;
@@ -33,18 +33,28 @@ const dashboardApi = {
   },
 };
 
-export const useQueryChallengeTask = () => {
-  return useQuery(["get-challenge-task"], () =>
-    dashboardApi.getChallengerTasks()
+export const useQueryChallengeTask = (userId: string) => {
+  return useQuery(
+    ["get-challenge-task", userId],
+    () => dashboardApi.getChallengerTasks({ userId: userId }),
+    { enabled: !!userId }
   );
 };
 
-export const useQueryDailyTask = () => {
-  return useQuery(["get-daily-task"], () => dashboardApi.getDailyTasks());
+export const useQueryDailyTask = (userId: string) => {
+  return useQuery(
+    ["get-daily-task", userId],
+    () => dashboardApi.getDailyTasks({ userId: userId }),
+    { enabled: !!userId }
+  );
 };
 
-export const useQueryGetRanking = () => {
-  return useQuery(["get-ranking"], () => dashboardApi.getRanking());
+export const useQueryGetRanking = (userId: string) => {
+  return useQuery(
+    ["get-ranking", userId],
+    () => dashboardApi.getRanking({ userId: userId }),
+    { enabled: !!userId }
+  );
 };
 
 export const useQueryGetDailyReward = (userId: string) => {
