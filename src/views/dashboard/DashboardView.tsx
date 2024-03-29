@@ -65,8 +65,11 @@ export const DashboardView = () => {
   const { data: challengeData, isLoading: challengeLoading } =
     useQueryChallengeTask(userId);
   const challengeItems = challengeData?.data;
-  const { data: dailyData, isLoading: dailyLoading } =
-    useQueryDailyTask(userId);
+  const {
+    data: dailyData,
+    isLoading: dailyLoading,
+    refetch: dailyRefetch,
+  } = useQueryDailyTask(userId);
   const dailyItems = dailyData?.data;
   const { data: rankingData, isLoading: rankingLoading } =
     useQueryGetRanking(userId);
@@ -274,7 +277,7 @@ export const DashboardView = () => {
                           <DailyChallengeItems
                             data={dailyItem}
                             userId={userId}
-                            refetch={walletUserRefetch}
+                            refetch={dailyRefetch}
                             key={index}
                           />
                         );
