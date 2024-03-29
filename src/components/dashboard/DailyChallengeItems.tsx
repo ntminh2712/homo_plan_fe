@@ -1,12 +1,10 @@
 import { useState } from "react";
 import dashboardApi, { useQuerySuccessDailyTask } from "../../api/dashboardApi";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation } from "react-query";
 import { ParamsClaimReward } from "../../type/api/dashboardType";
 import { useLoading } from "../../hooks/useLoading";
 
 export const DailyChallengeItems = ({ data, userId, refetch }: any) => {
-  const queryClient = useQueryClient();
-
   const [callSuccess, setCallSuccess] = useState(false);
   const { isLoading } = useQuerySuccessDailyTask(
     userId,
@@ -16,7 +14,7 @@ export const DailyChallengeItems = ({ data, userId, refetch }: any) => {
   const handleSuccessDailyTask = async () => {
     await setCallSuccess(true);
     window.open(data.link);
-    queryClient.fetchQuery("get-daily-task");
+    refetch();
   };
 
   const mutationClaimReward = useMutation((params: ParamsClaimReward) => {
